@@ -1,11 +1,21 @@
 const renderPageLimit = 5 // change the render page amount
-const { currentPage, totalPage, renderPages } = getPagination(25, 5, 33)
+const { currentPage, totalPage, renderPages } = getPagination(offset, limit, total)
 
 function getPagination (offset, limit, total) {
+  if (limit <= 0 || total <= 0) {
+    console.log('輸入值不可為負或 0')
+    return
+  }
+
   const totalPage = Math.ceil(total / limit)
-  const currentPage = Math.ceil((offset + 1) / limit)
+  let currentPage = Math.ceil((offset + 1) / limit)
   const halfRenderPageLimit = Math.floor(renderPageLimit / 2)
   const renderPages = []
+
+  // If offset > total
+  if (offset > total) {
+    currentPage = totalPage
+  }
 
   if (currentPage + limit <= totalPage) {
     for (let i = 1; i <= limit; i++) {
@@ -22,6 +32,3 @@ function getPagination (offset, limit, total) {
   }
   return { currentPage, totalPage, renderPages }
 }
-console.log('currentPage', currentPage)
-console.log('totalPage', totalPage)
-console.log('renderPages', renderPages)
