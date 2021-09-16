@@ -6,9 +6,9 @@ function getPagination (offset, limit, total) {
     console.log('輸入值不可為負或 0')
     return
   }
-
   const totalPage = Math.ceil(total / limit)
   let currentPage = Math.ceil((offset + 1) / limit)
+
   const halfRenderPageLimit = Math.floor(renderPageLimit / 2)
   const renderPages = []
 

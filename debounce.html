@@ -23,7 +23,7 @@
       <span class="input-group-text"
             id="inputGroup-sizing-lg">Input</span>
       <input type="text"
-             class="form-control"
+             class="normalInput form-control"
              aria-label="Sizing example input"
              aria-describedby="inputGroup-sizing-lg">
     </div>
@@ -35,6 +35,18 @@
       <span class="badge bg-info me-2">Debounce input: </span>
       <span class="debounce fs-4"></span>
     </div>
+    <div class="input-group input-group-lg my-3">
+      <span class="input-group-text"
+            id="inputGroup-sizing-lg"> throttle Input</span>
+      <input type="text"
+             class="throttleInput form-control"
+             aria-label="Sizing example input"
+             aria-describedby="inputGroup-sizing-lg">
+    </div>
+    <div class="fs-3 my-5 d-flex align-items-center">
+      <span class="badge bg-success me-2">throttle input: </span>
+      <span class="throttle fs-4"></span>
+    </div>
 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -42,13 +54,17 @@
           crossorigin="anonymous"></script>
   <script>
     const normalInput = document.querySelector('.normal')
-    const input = document.querySelector('input')
+    const input = document.querySelector('.normalInput')
     const debounceInput = document.querySelector('.debounce')
+    const throttleInput = document.querySelector('.throttle')
+    const special = document.querySelector('.throttleInput')
 
     input.addEventListener('input', (event) => {
       updateNormalInput()
       debounce(updateDebounceInput, 1000)()
     })
+    special.addEventListener('input', throttle(updateThrottleInput, 2000))
+
 
     function debounce(func, delayTime = 1000) {
       let timer
@@ -57,12 +73,29 @@
         timeout = setTimeout(func, delayTime)
       }
     }
+    function throttle(func, duration) {
+      let isWaited = false
+      return function () {
+        if (!isWaited) {
+
+          isWaited = true
+          setTimeout(function () {
+            func.apply(this, arguments)
+            isWaited = false
+          }, duration)
+        }
+      }
+    }
 
     function updateNormalInput() {
       normalInput.innerText = input.value
     }
     function updateDebounceInput() {
       debounceInput.innerText = input.value
+    }
+    function updateThrottleInput() {
+      console.log('updata')
+      throttleInput.innerText = special.value
     }
   </script>
 
