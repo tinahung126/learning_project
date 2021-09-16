@@ -77,7 +77,6 @@
       let isWaited = false
       return function () {
         if (!isWaited) {
-
           isWaited = true
           setTimeout(function () {
             func.apply(this, arguments)
