@@ -1,33 +1,30 @@
-const renderPageLimit = 5 // change the render page amount
+const limitPages = 5 // default = 5, you can change this.
 const { currentPage, totalPage, renderPages } = getPagination(offset, limit, total)
 
 function getPagination (offset, limit, total) {
+  // Error handle
   if (limit <= 0 || total <= 0) {
     console.log('輸入值不可為負或 0')
     return
   }
-  const totalPage = Math.ceil(total / limit)
-  let currentPage = Math.ceil((offset + 1) / limit)
-
-  const halfRenderPageLimit = Math.floor(renderPageLimit / 2)
-  const renderPages = []
-
-  // If offset > total
   if (offset > total) {
-    currentPage = totalPage
+    console.log('資料開始位置大於資料總數')
+    return
   }
 
-  if (currentPage + limit <= totalPage) {
-    for (let i = 1; i <= limit; i++) {
-      renderPages.push(i)
-    }
-  } else if (totalPage - currentPage <= halfRenderPageLimit) {
-    for (let i = totalPage; i > totalPage - renderPageLimit; i--) {
-      renderPages.unshift(i)
-    }
-  } else {
-    for (let i = -halfRenderPageLimit; i <= halfRenderPageLimit; i++) {
-      renderPages.push(currentPage + i)
+  const totalPage = Math.ceil(total / limit)
+  const currentPage = Math.ceil((offset + 1) / limit)
+  const renderPages = []
+
+  for (let i = 0; i < limitPages; i++) {
+    const halfPage = Math.floor(limitPages / 2)
+
+    if ((currentPage - halfPage) <= 0 || limitPages >= totalPage) {
+      renderPages.push(i + 1)
+    } else if ((currentPage + halfPage) > totalPage) {
+      renderPages.unshift(totalPage - i)
+    } else {
+      renderPages.push((currentPage - halfPage) + i)
     }
   }
   return { currentPage, totalPage, renderPages }
